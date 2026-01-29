@@ -4,9 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta name="mobile-web-app-capable" content="yes">
-    <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#2d8659">
-    <link rel="apple-touch-icon" href="icon-192.png">
     <title>Kasir BS Pro Ultimate</title>
     <style>
         * {
@@ -221,21 +218,50 @@
         }
 
         .stat-card {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            padding: 15px;
-            border-radius: 10px;
+            background: linear-gradient(135deg, #2d8659 0%, #f5a623 100%);
             color: white;
+            padding: 15px;
+            border-radius: 8px;
             text-align: center;
         }
 
-        .stat-card h3 {
-            font-size: 32px;
+        .stat-card h4 {
+            font-size: 12px;
+            opacity: 0.9;
             margin-bottom: 5px;
         }
 
-        .stat-card p {
-            font-size: 12px;
-            opacity: 0.9;
+        .stat-card .value {
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .alert {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: white;
+            padding: 15px 25px;
+            border-radius: 8px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+            z-index: 1000;
+            display: none;
+            max-width: 90%;
+        }
+
+        .alert.show {
+            display: block;
+            animation: slideDown 0.3s ease;
+        }
+
+        @keyframes slideDown {
+            from { transform: translate(-50%, -100%); }
+            to { transform: translate(-50%, 0); }
+        }
+
+        .search-box {
+            margin-bottom: 15px;
         }
 
         .modal {
@@ -245,9 +271,10 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0,0,0,0.8);
-            z-index: 1000;
+            background: rgba(0,0,0,0.7);
+            z-index: 2000;
             overflow-y: auto;
+            padding: 20px;
         }
 
         .modal.show {
@@ -260,9 +287,8 @@
             background: white;
             border-radius: 15px;
             padding: 25px;
-            max-width: 500px;
-            width: 90%;
-            margin: 20px;
+            max-width: 450px;
+            width: 100%;
             max-height: 90vh;
             overflow-y: auto;
         }
@@ -272,274 +298,292 @@
             justify-content: space-between;
             align-items: center;
             margin-bottom: 20px;
-            padding-bottom: 15px;
-            border-bottom: 2px solid #e0e0e0;
         }
 
         .modal-header h2 {
             margin: 0;
-            color: #2d8659;
         }
 
         .close-btn {
-            background: #f56565;
-            color: white;
+            background: none;
             border: none;
+            font-size: 28px;
+            color: #999;
+            cursor: pointer;
+            padding: 0;
             width: 35px;
             height: 35px;
-            border-radius: 50%;
-            font-size: 20px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            line-height: 35px;
         }
 
         .detail-row {
             display: flex;
-            justify-content: space-between;
-            padding: 12px;
+            padding: 10px 0;
             border-bottom: 1px solid #e0e0e0;
-        }
-
-        .detail-row:last-child {
-            border-bottom: none;
         }
 
         .detail-label {
             font-weight: 600;
-            color: #666;
+            color: #667eea;
+            width: 140px;
+            flex-shrink: 0;
         }
 
         .detail-value {
-            color: #2d8659;
-            font-weight: 600;
-            text-align: right;
+            color: #333;
+            flex: 1;
         }
 
-        .alert {
-            position: fixed;
-            top: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: white;
-            padding: 15px 25px;
-            border-radius: 10px;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
-            z-index: 2000;
-            display: none;
-            font-weight: 600;
-            min-width: 250px;
-            text-align: center;
-        }
-
-        .alert.show {
-            display: block;
-            animation: slideDown 0.3s ease;
-        }
-
-        @keyframes slideDown {
-            from {
-                transform: translateX(-50%) translateY(-100%);
-                opacity: 0;
-            }
-            to {
-                transform: translateX(-50%) translateY(0);
-                opacity: 1;
-            }
-        }
-
-        .search-box {
-            margin-bottom: 15px;
-        }
-
-        .search-box input {
-            width: 100%;
-            padding: 12px;
-            border: 2px solid #e0e0e0;
-            border-radius: 8px;
-            font-size: 16px;
-        }
-
-        @media print {
-            body * {
-                visibility: hidden;
-            }
+        .note {
+            background: #e6f3ff;
+            border-left: 4px solid #667eea;
+            padding: 10px 15px;
+            margin-top: 10px;
+            border-radius: 4px;
+            font-size: 13px;
+            color: #555;
         }
     </style>
 </head>
 <body>
     <div class="header">
-        <h1>⚡ KASIR BS PRO ⚡</h1>
+        <h1>🇮🇩 𝗠𝗮𝘀 𝗕𝗮𝗴𝘂𝘀 𝗔𝗽𝗸 🇮🇩</h1>
     </div>
-
+    
     <div class="container">
         <div class="tabs">
-            <button class="tab-btn active" onclick="switchTab('printer')">🖨️ PRINTER</button>
-            <button class="tab-btn" onclick="switchTab('transaction')">📝 TRANSAKSI</button>
-            <button class="tab-btn" onclick="switchTab('history')">📊 RIWAYAT</button>
-            <button class="tab-btn" onclick="switchTab('settings')">⚙️ SETTING</button>
+            <button class="tab-btn active" onclick="switchTab('transaksi')">📝 Transaksi</button>
+            <button class="tab-btn" onclick="switchTab('history')">📊 Riwayat</button>
+            <button class="tab-btn" onclick="switchTab('settings')">⚙️ Setting</button>
         </div>
 
-        <div id="printer" class="tab-content active">
+        <div id="tab-transaksi" class="tab-content active">
             <div class="card">
-                <h2>🔌 Koneksi Bluetooth</h2>
                 <div id="status" class="status status-disconnected">
-                    ❌ Belum Terhubung
+                    📱 Bluetooth: Belum terhubung
                 </div>
-                <button class="btn btn-connect" onclick="connectPrinter()">
-                    🔗 Hubungkan Printer
+                
+                <button class="btn btn-connect" onclick="connectBluetooth()">
+                    🔌 Hubungkan Printer
                 </button>
-                <button class="btn btn-danger" onclick="disconnectPrinter()" style="display: none;" id="disconnectBtn">
-                    ⚡ Putuskan Koneksi
+                
+                <button class="btn btn-connect" onclick="testPrint()" id="btnTest" disabled style="background: #ed8936;">
+                    🧪 Test Print
                 </button>
             </div>
 
             <div class="card">
-                <h2>🧪 Test Cetak</h2>
-                <button class="btn btn-print" onclick="testPrint()" id="testPrintBtn" disabled>
-                    🖨️ Cetak Test
-                </button>
-            </div>
-        </div>
-
-        <div id="transaction" class="tab-content">
-            <div class="card">
-                <h2>📝 Input Transaksi</h2>
+                <h2>📝 Data Transaksi</h2>
+                
                 <div class="form-group">
-                    <label>No. Struk</label>
-                    <input type="text" id="receiptNo" value="001" placeholder="No. Struk">
+                    <label>No Struk</label>
+                    <input type="text" id="receiptNo" value="100">
                 </div>
 
                 <div class="form-group">
                     <label>Nama Pelanggan *</label>
-                    <input type="text" id="customerName" placeholder="Nama lengkap pelanggan">
+                    <input type="text" id="customerName" placeholder="Nama pelanggan">
                 </div>
 
                 <div class="form-group">
-                    <label>Alamat Pelanggan</label>
-                    <textarea id="customerAddress" placeholder="Alamat lengkap (opsional)"></textarea>
+                    <label>Alamat</label>
+                    <input type="text" id="customerAddress" placeholder="Alamat">
                 </div>
 
                 <div class="form-group">
                     <label>Nama Barang *</label>
-                    <input type="text" id="itemName" placeholder="Nama barang yang dibeli">
+                    <input type="text" id="itemName" placeholder="Contoh: Vivo Y19">
                 </div>
 
                 <div class="form-group">
-                    <label>DP (Uang Muka)</label>
-                    <input type="number" id="dp" value="0" placeholder="0">
+                    <label>DP (Down Payment)</label>
+                    <input type="number" id="dp" placeholder="0" value="0">
                 </div>
 
                 <div class="form-group">
-                    <label>Angsuran Per Bulan</label>
-                    <input type="number" id="installment" placeholder="Jumlah angsuran">
+                    <label>Angsuran (Per Bulan)</label>
+                    <input type="number" id="installment" placeholder="90000">
                 </div>
 
                 <div class="form-group">
-                    <label>Jumlah Angsuran (Bulan)</label>
-                    <input type="number" id="installmentCount" value="48" placeholder="48">
+                    <label>Jumlah Angsuran</label>
+                    <input type="number" id="installmentCount" placeholder="48" value="48">
                 </div>
 
                 <div class="form-group">
                     <label>Angsuran Ke-</label>
-                    <input type="number" id="installmentNumber" value="0" placeholder="0">
+                    <input type="number" id="installmentNumber" placeholder="0" value="0">
                 </div>
 
-                <button class="btn btn-print" onclick="saveAndPrint()">
-                    💾 Simpan & Cetak
+                <button class="btn btn-print" onclick="printAndSave()" id="btnPrint" disabled>
+                    💾 SIMPAN & PRINT
                 </button>
+
                 <button class="btn btn-reset" onclick="resetForm()">
                     🔄 Reset Form
                 </button>
             </div>
         </div>
 
-        <div id="history" class="tab-content">
+        <div id="tab-history" class="tab-content">
             <div class="card">
+                <h2>📊 Statistik</h2>
                 <div class="stats">
                     <div class="stat-card">
-                        <h3 id="totalTrans">0</h3>
-                        <p>Total Transaksi</p>
+                        <h4>Total Transaksi</h4>
+                        <div class="value" id="totalTrans">0</div>
                     </div>
-                    <div class="stat-card" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
-                        <h3 id="todayTrans">0</h3>
-                        <p>Hari Ini</p>
+                    <div class="stat-card">
+                        <h4>Hari Ini</h4>
+                        <div class="value" id="todayTrans">0</div>
                     </div>
                 </div>
+            </div>
 
+            <div class="card">
+                <h2>🔍 Cari Riwayat</h2>
                 <div class="search-box">
-                    <input type="text" id="searchInput" placeholder="🔍 Cari nama/no struk/barang..." oninput="searchHistory()">
+                    <input type="text" id="searchInput" placeholder="Cari nama atau nomor struk..." onkeyup="searchHistory()">
                 </div>
+            </div>
 
-                <button class="btn btn-print" onclick="exportToCSV()">
-                    📥 Export ke CSV
+            <div id="historyList"></div>
+
+            <div class="card">
+                <button class="btn btn-connect" onclick="exportToCSV()">
+                    📊 Export ke Excel
                 </button>
                 <button class="btn btn-danger" onclick="clearAllHistory()">
                     🗑️ Hapus Semua Riwayat
                 </button>
             </div>
-
-            <div id="historyList"></div>
         </div>
 
-        <div id="settings" class="tab-content">
+        <div id="tab-settings" class="tab-content">
             <div class="card">
-                <h2>⚙️ Pengaturan Printer</h2>
+                <h2>🏪 Informasi Toko</h2>
                 
                 <div class="form-group">
                     <label>Nama Toko</label>
-                    <input type="text" id="storeName" placeholder="Nama Toko">
+                    <input type="text" id="storeName" value="BS">
                 </div>
 
                 <div class="form-group">
-                    <label>Alamat Toko</label>
-                    <textarea id="storeAddress" placeholder="Alamat lengkap toko"></textarea>
+                    <label>Alamat Toko Baris 1</label>
+                    <input type="text" id="storeAddress1" value="JALAN RAYA TALANGSUKO PADI">
                 </div>
 
                 <div class="form-group">
-                    <label>Telepon</label>
-                    <input type="tel" id="storePhone" placeholder="No. Telepon">
+                    <label>Alamat Toko Baris 2</label>
+                    <input type="text" id="storeAddress2" value="KECAMATAN TUREN">
                 </div>
 
                 <div class="form-group">
-                    <label>Lebar Kertas</label>
-                    <select id="paperWidth">
-                        <option value="32">32 Karakter (58mm)</option>
-                        <option value="42">42 Karakter (80mm)</option>
-                    </select>
+                    <label>Nomor Telepon 1</label>
+                    <input type="tel" id="phone1" value="085791177772">
                 </div>
 
-                <button class="btn btn-connect" onclick="saveSettings()">
-                    💾 Simpan Pengaturan
-                </button>
+                <div class="form-group">
+                    <label>Nomor Telepon 2</label>
+                    <input type="tel" id="phone2" value="085655581259">
+                </div>
+
+                <div class="form-group">
+                    <label>💬 Teks Penutup Struk</label>
+                    <input type="text" id="closingText" value="Terimah Kasih" maxlength="32" placeholder="Contoh: Terimakasih, Datang Lagi">
+                    <div class="note">
+                        💡 Teks ini akan muncul di bagian bawah struk dalam gaya miring/italic. Maksimal 32 karakter.
+                    </div>
+                </div>
             </div>
 
             <div class="card">
-                <h2>ℹ️ Informasi Aplikasi</h2>
-                <p style="color: #666; line-height: 1.6;">
-                    <strong>Kasir BS Pro Ultimate</strong><br>
-                    Versi: 2.0<br>
-                    Aplikasi kasir dengan printer Bluetooth<br>
-                    <br>
-                    Fitur:<br>
-                    ✅ Koneksi Bluetooth<br>
-                    ✅ Cetak Struk Otomatis<br>
-                    ✅ Riwayat Transaksi<br>
-                    ✅ Export Data CSV<br>
-                    ✅ Edit & Hapus Transaksi<br>
-                </p>
+                <h2>🎨 Gaya Tampilan Struk</h2>
+
+                <div class="form-group">
+                    <label>🔤 Jenis Huruf</label>
+                    <select id="fontType">
+                        <option value="standard">Standard (Default)</option>
+                        <option value="courier">Courier (Mesin Ketik)</option>
+                        <option value="gothic">Gothic (Modern)</option>
+                        <option value="times">Times (Klasik)</option>
+                        <option value="arial">Arial (Clean)</option>
+                        <option value="monospace">Monospace (Rapi)</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>💪 Gaya Font</label>
+                    <select id="fontStyle">
+                        <option value="normal">Normal</option>
+                        <option value="bold">Tebal (Bold)</option>
+                        <option value="italic">Miring (Italic)</option>
+                        <option value="condensed">Ramping (Condensed)</option>
+                        <option value="wide">Lebar (Wide)</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>📐 Ukuran Huruf</label>
+                    <select id="fontSize">
+                        <option value="small">Kecil (Hemat Kertas)</option>
+                        <option value="normal">Normal</option>
+                        <option value="large">Besar (Lebih Jelas)</option>
+                        <option value="xlarge">Extra Besar</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>📏 Gaya Garis Pemisah</label>
+                    <select id="lineStyle">
+                        <option value="double">═══════ (Garis Ganda)</option>
+                        <option value="single">─────── (Garis Tunggal)</option>
+                        <option value="dash">- - - - - (Putus-putus)</option>
+                        <option value="dot">· · · · · (Titik-titik)</option>
+                        <option value="star">******* (Bintang)</option>
+                        <option value="wave">~~~~~~~ (Gelombang)</option>
+                        <option value="hash">####### (Pagar)</option>
+                        <option value="plus">+++++++ (Plus)</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>📊 Spasi Antar Baris</label>
+                    <select id="lineSpacing">
+                        <option value="0">Rapat (Tidak ada spasi)</option>
+                        <option value="1">Normal (1 baris)</option>
+                        <option value="2">Longgar (2 baris)</option>
+                        <option value="3">Sangat Longgar (3 baris)</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>📄 Spasi Antar Paragraf</label>
+                    <select id="paragraphSpacing">
+                        <option value="0">Tidak ada</option>
+                        <option value="1">1 baris</option>
+                        <option value="2">2 baris</option>
+                        <option value="3">3 baris</option>
+                    </select>
+                </div>
+
+                <button class="btn btn-print" onclick="saveSettings()">
+                    💾 Simpan Semua Pengaturan
+                </button>
             </div>
         </div>
     </div>
 
+    <div id="alert" class="alert"></div>
+
     <div id="modalDetail" class="modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h2>📋 Detail Transaksi</h2>
-                <button class="close-btn" onclick="closeModal('modalDetail')">×</button>
+                <h2>📄 Detail Transaksi</h2>
+                <button class="close-btn" onclick="closeModal('modalDetail')">&times;</button>
             </div>
             <div id="detailContent"></div>
+            <button class="btn btn-reset" onclick="closeModal('modalDetail')" style="margin-top: 20px;">Tutup</button>
         </div>
     </div>
 
@@ -547,10 +591,11 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h2>✏️ Edit Transaksi</h2>
-                <button class="close-btn" onclick="closeModal('modalEdit')">×</button>
+                <button class="close-btn" onclick="closeModal('modalEdit')">&times;</button>
             </div>
+            
             <div class="form-group">
-                <label>No. Struk</label>
+                <label>No Struk</label>
                 <input type="text" id="editReceiptNo">
             </div>
             <div class="form-group">
@@ -559,7 +604,7 @@
             </div>
             <div class="form-group">
                 <label>Alamat</label>
-                <textarea id="editCustomerAddress"></textarea>
+                <input type="text" id="editCustomerAddress">
             </div>
             <div class="form-group">
                 <label>Nama Barang</label>
@@ -581,46 +626,36 @@
                 <label>Angsuran Ke-</label>
                 <input type="number" id="editInstallmentNumber">
             </div>
-            <button class="btn btn-connect" onclick="saveEdit()">💾 Simpan Perubahan</button>
-            <button class="btn btn-reset" onclick="closeModal('modalEdit')">❌ Batal</button>
+
+            <button class="btn btn-print" onclick="saveEdit()">💾 Simpan Perubahan</button>
+            <button class="btn btn-reset" onclick="closeModal('modalEdit')">Batal</button>
         </div>
     </div>
 
-    <div id="alert" class="alert"></div>
-
     <script>
-        let bluetoothDevice = null;
-        let printerCharacteristic = null;
-        let allTransactions = [];
-
         const STORAGE_KEYS = {
-            settings: 'kasir_settings',
-            transactions: 'kasir_transactions'
+            transactions: 'kasir_transactions',
+            settings: 'kasir_settings'
         };
+
+        let bluetoothDevice = null;
+        let bluetoothCharacteristic = null;
+        let allTransactions = [];
 
         function init() {
             loadSettings();
             loadHistory();
             updateStats();
-            
-            const savedReceiptNo = localStorage.getItem('lastReceiptNo');
-            if (savedReceiptNo) {
-                document.getElementById('receiptNo').value = parseInt(savedReceiptNo) + 1;
-            }
         }
 
-        function switchTab(tabName) {
-            document.querySelectorAll('.tab-content').forEach(tab => {
-                tab.classList.remove('active');
-            });
-            document.querySelectorAll('.tab-btn').forEach(btn => {
-                btn.classList.remove('active');
-            });
+        function switchTab(tab) {
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
             
-            document.getElementById(tabName).classList.add('active');
             event.target.classList.add('active');
+            document.getElementById('tab-' + tab).classList.add('active');
 
-            if (tabName === 'history') {
+            if (tab === 'history') {
                 loadHistory();
                 updateStats();
             }
@@ -630,170 +665,243 @@
             const alert = document.getElementById('alert');
             alert.textContent = message;
             alert.classList.add('show');
-            setTimeout(() => {
-                alert.classList.remove('show');
-            }, 3000);
+            setTimeout(() => alert.classList.remove('show'), 3000);
         }
 
-        async function connectPrinter() {
+        function getLine(style, length = 32) {
+            const patterns = {
+                single: '-', double: '=', dash: '- ', dot: '. ',
+                star: '*', wave: '~', hash: '#', plus: '+'
+            };
+            const char = patterns[style] || '=';
+            if (style === 'dash' || style === 'dot') {
+                return (char.repeat(Math.ceil(length / 2))).substring(0, length);
+            }
+            return char.repeat(length);
+        }
+
+        function getFontCommand(style, size) {
+            let cmd = '';
+            switch(style) {
+                case 'bold': cmd += '\x1B\x45\x01'; break;
+                case 'italic': cmd += '\x1B\x34'; break;
+                case 'condensed': cmd += '\x1B\x0F'; break;
+                case 'wide': cmd += '\x1B\x0E'; break;
+            }
+            switch(size) {
+                case 'small': cmd += '\x1D\x21\x00'; break;
+                case 'large': cmd += '\x1D\x21\x11'; break;
+                case 'xlarge': cmd += '\x1D\x21\x22'; break;
+                default: cmd += '\x1D\x21\x00'; break;
+            }
+            return cmd;
+        }
+
+        function saveSettings() {
+            const settings = {
+                storeName: document.getElementById('storeName').value,
+                storeAddress: document.getElementById('storeAddress1').value + '\n' + document.getElementById('storeAddress2').value,
+                phone1: document.getElementById('phone1').value,
+                phone2: document.getElementById('phone2').value,
+                closingText: document.getElementById('closingText').value || 'Terimah Kasih',
+                fontType: document.getElementById('fontType').value,
+                fontStyle: document.getElementById('fontStyle').value,
+                fontSize: document.getElementById('fontSize').value,
+                lineStyle: document.getElementById('lineStyle').value,
+                lineSpacing: document.getElementById('lineSpacing').value,
+                paragraphSpacing: document.getElementById('paragraphSpacing').value
+            };
+            localStorage.setItem(STORAGE_KEYS.settings, JSON.stringify(settings));
+            showAlert('✅ Pengaturan berhasil disimpan!');
+        }
+
+        function loadSettings() {
+            const settings = JSON.parse(localStorage.getItem(STORAGE_KEYS.settings)) || {
+                storeName: 'BS',
+                storeAddress: 'JALAN RAYA TALANGSUKO PADI\nKECAMATAN TUREN',
+                phone1: '085791177772',
+                phone2: '085655581259',
+                closingText: 'Terimah Kasih',
+                fontType: 'standard',
+                fontStyle: 'normal',
+                fontSize: 'normal',
+                lineStyle: 'double',
+                lineSpacing: '1',
+                paragraphSpacing: '1'
+            };
+            
+            const addressLines = settings.storeAddress.split('\n');
+            document.getElementById('storeName').value = settings.storeName;
+            document.getElementById('storeAddress1').value = addressLines[0] || '';
+            document.getElementById('storeAddress2').value = addressLines[1] || '';
+            document.getElementById('phone1').value = settings.phone1;
+            document.getElementById('phone2').value = settings.phone2;
+            document.getElementById('closingText').value = settings.closingText || 'Terimah Kasih';
+            document.getElementById('fontType').value = settings.fontType || 'standard';
+            document.getElementById('fontStyle').value = settings.fontStyle || 'normal';
+            document.getElementById('fontSize').value = settings.fontSize || 'normal';
+            document.getElementById('lineStyle').value = settings.lineStyle || 'double';
+            document.getElementById('lineSpacing').value = settings.lineSpacing || '1';
+            document.getElementById('paragraphSpacing').value = settings.paragraphSpacing || '1';
+        }
+
+        async function connectBluetooth() {
             try {
                 if (!navigator.bluetooth) {
                     showAlert('❌ Browser tidak support Bluetooth!');
                     return;
                 }
 
-                const device = await navigator.bluetooth.requestDevice({
-                    filters: [{ services: ['000018f0-0000-1000-8000-00805f9b34fb'] }],
+                showAlert('⏳ Mencari printer...');
+
+                bluetoothDevice = await navigator.bluetooth.requestDevice({
+                    acceptAllDevices: true,
                     optionalServices: ['000018f0-0000-1000-8000-00805f9b34fb']
                 });
 
-                bluetoothDevice = device;
-                const server = await device.gatt.connect();
+                showAlert('⏳ Menghubungkan...');
+
+                const server = await bluetoothDevice.gatt.connect();
                 const service = await server.getPrimaryService('000018f0-0000-1000-8000-00805f9b34fb');
-                printerCharacteristic = await service.getCharacteristic('00002af1-0000-1000-8000-00805f9b34fb');
+                bluetoothCharacteristic = await service.getCharacteristic('00002af1-0000-1000-8000-00805f9b34fb');
 
                 document.getElementById('status').className = 'status status-connected';
-                document.getElementById('status').textContent = '✅ Terhubung: ' + device.name;
-                document.getElementById('testPrintBtn').disabled = false;
-                document.getElementById('disconnectBtn').style.display = 'block';
-                
-                showAlert('✅ Printer terhubung!');
-            } catch (error) {
-                showAlert('❌ Koneksi gagal: ' + error.message);
-            }
-        }
+                document.getElementById('status').textContent = `✅ Terhubung: ${bluetoothDevice.name}`;
+                document.getElementById('btnTest').disabled = false;
+                document.getElementById('btnPrint').disabled = false;
 
-        function disconnectPrinter() {
-            if (bluetoothDevice && bluetoothDevice.gatt.connected) {
-                bluetoothDevice.gatt.disconnect();
+                showAlert('✅ Printer berhasil terhubung!');
+            } catch (error) {
+                showAlert('❌ Gagal: ' + error.message);
             }
-            
-            bluetoothDevice = null;
-            printerCharacteristic = null;
-            
-            document.getElementById('status').className = 'status status-disconnected';
-            document.getElementById('status').textContent = '❌ Belum Terhubung';
-            document.getElementById('testPrintBtn').disabled = true;
-            document.getElementById('disconnectBtn').style.display = 'none';
-            
-            showAlert('⚡ Printer terputus');
         }
 
         async function sendToPrinter(text) {
-            if (!printerCharacteristic) {
-                showAlert('❌ Printer belum terhubung!');
-                return false;
-            }
-
-            try {
-                const encoder = new TextEncoder();
-                const data = encoder.encode(text);
-                
-                const chunkSize = 20;
-                for (let i = 0; i < data.length; i += chunkSize) {
-                    const chunk = data.slice(i, i + chunkSize);
-                    await printerCharacteristic.writeValue(chunk);
-                    await new Promise(resolve => setTimeout(resolve, 50));
-                }
-                
-                return true;
-            } catch (error) {
-                showAlert('❌ Gagal cetak: ' + error.message);
-                return false;
+            const encoder = new TextEncoder();
+            const data = encoder.encode(text);
+            const chunkSize = 20;
+            
+            for (let i = 0; i < data.length; i += chunkSize) {
+                const chunk = data.slice(i, Math.min(i + chunkSize, data.length));
+                await bluetoothCharacteristic.writeValue(chunk);
+                await new Promise(resolve => setTimeout(resolve, 50));
             }
         }
 
         async function testPrint() {
-            const settings = JSON.parse(localStorage.getItem(STORAGE_KEYS.settings)) || {};
-            const storeName = settings.storeName || 'TOKO BS';
-            const width = parseInt(settings.paperWidth) || 32;
+            if (!bluetoothCharacteristic) {
+                showAlert('❌ Printer belum terhubung!');
+                return;
+            }
 
-            let receipt = '\n';
-            receipt += centerText('='.repeat(width), width) + '\n';
-            receipt += centerText(storeName, width) + '\n';
-            receipt += centerText('TEST PRINTER', width) + '\n';
-            receipt += centerText('='.repeat(width), width) + '\n';
-            receipt += '\n';
-            receipt += centerText('Printer Berfungsi!', width) + '\n';
-            receipt += centerText(new Date().toLocaleString('id-ID'), width) + '\n';
-            receipt += '\n';
-            receipt += centerText('-'.repeat(width), width) + '\n';
-            receipt += '\n\n\n';
+            try {
+                showAlert('⏳ Test print...');
+                const settings = JSON.parse(localStorage.getItem(STORAGE_KEYS.settings)) || {};
+                const line = getLine(settings.lineStyle || 'double', 32);
+                const closingText = settings.closingText || 'Terimah Kasih';
+                
+                const testData = '\n\n      === TEST PRINT ===\n    Printer Taffware 58mm\n           OK!\n' + line + '\n\x1B\x34' + centerText(closingText, 32) + '\n\x1B\x35' + line + '\n\n\n\n';
 
-            const success = await sendToPrinter(receipt);
-            if (success) {
-                showAlert('✅ Test cetak berhasil!');
+                await sendToPrinter(testData);
+                showAlert('✅ Test berhasil!');
+            } catch (error) {
+                showAlert('❌ Test gagal: ' + error.message);
             }
         }
 
         function centerText(text, width) {
-            const padding = Math.max(0, Math.floor((width - text.length) / 2));
-            return ' '.repeat(padding) + text;
+            const spaces = Math.floor((width - text.length) / 2);
+            return ' '.repeat(Math.max(0, spaces)) + text;
         }
 
-        function loadSettings() {
-            const settings = JSON.parse(localStorage.getItem(STORAGE_KEYS.settings)) || {};
-            document.getElementById('storeName').value = settings.storeName || '';
-            document.getElementById('storeAddress').value = settings.storeAddress || '';
-            document.getElementById('storePhone').value = settings.storePhone || '';
-            document.getElementById('paperWidth').value = settings.paperWidth || '32';
+        function padRight(text, width) {
+            return text + ' '.repeat(Math.max(0, width - text.length));
         }
 
-        function saveSettings() {
-            const settings = {
-                storeName: document.getElementById('storeName').value,
-                storeAddress: document.getElementById('storeAddress').value,
-                storePhone: document.getElementById('storePhone').value,
-                paperWidth: document.getElementById('paperWidth').value
-            };
-            
-            localStorage.setItem(STORAGE_KEYS.settings, JSON.stringify(settings));
-            showAlert('✅ Pengaturan tersimpan!');
-        }
-
-        async function printReceipt(data) {
-            if (!printerCharacteristic) {
-                showAlert('❌ Hubungkan printer dulu!');
+        async function printReceipt(data = null) {
+            if (!bluetoothCharacteristic) {
+                showAlert('❌ Printer belum terhubung!');
                 return false;
             }
 
-            const settings = JSON.parse(localStorage.getItem(STORAGE_KEYS.settings)) || {};
-            const storeName = settings.storeName || 'TOKO BS';
-            const storeAddress = settings.storeAddress || '';
-            const storePhone = settings.storePhone || '';
-            const width = parseInt(settings.paperWidth) || 32;
+            const receiptData = data || {
+                receiptNo: document.getElementById('receiptNo').value,
+                customerName: document.getElementById('customerName').value.trim(),
+                customerAddress: document.getElementById('customerAddress').value.trim(),
+                itemName: document.getElementById('itemName').value.trim(),
+                dp: document.getElementById('dp').value || '0',
+                installment: document.getElementById('installment').value,
+                installmentCount: document.getElementById('installmentCount').value,
+                installmentNumber: document.getElementById('installmentNumber').value
+            };
 
-            let receipt = '\n';
-            receipt += centerText('='.repeat(width), width) + '\n';
-            receipt += centerText(storeName, width) + '\n';
-            if (storeAddress) receipt += centerText(storeAddress, width) + '\n';
-            if (storePhone) receipt += centerText('Telp: ' + storePhone, width) + '\n';
-            receipt += centerText('='.repeat(width), width) + '\n';
-            receipt += '\n';
-            receipt += `No Struk: ${data.receiptNo}\n`;
-            receipt += `Tanggal : ${data.dateFormatted}\n`;
-            receipt += `Waktu   : ${data.timeFormatted}\n`;
-            receipt += '-'.repeat(width) + '\n';
-            receipt += `Nama    : ${data.customerName}\n`;
-            if (data.customerAddress) {
-                receipt += `Alamat  : ${data.customerAddress}\n`;
+            if (!receiptData.customerName || !receiptData.itemName) {
+                showAlert('❌ Nama pelanggan dan barang harus diisi!');
+                return false;
             }
-            receipt += `Barang  : ${data.itemName}\n`;
-            receipt += '-'.repeat(width) + '\n';
-            receipt += `DP      : Rp ${data.dp.toLocaleString('id-ID')}\n`;
-            receipt += `Angsuran: Rp ${data.installment.toLocaleString('id-ID')}\n`;
-            receipt += `Jumlah  : ${data.installmentCount}x\n`;
-            receipt += `Ke-     : ${data.installmentNumber}\n`;
-            receipt += '-'.repeat(width) + '\n';
-            receipt += `Total   : Rp ${(data.installment * data.installmentCount).toLocaleString('id-ID')}\n`;
-            receipt += '='.repeat(width) + '\n';
-            receipt += centerText('TERIMA KASIH', width) + '\n';
-            receipt += '\n\n\n';
 
-            return await sendToPrinter(receipt);
+            try {
+                showAlert('⏳ Mencetak struk...');
+
+                const settings = JSON.parse(localStorage.getItem(STORAGE_KEYS.settings)) || {};
+                const lineStyle = settings.lineStyle || 'double';
+                const fontStyle = settings.fontStyle || 'normal';
+                const fontSize = settings.fontSize || 'normal';
+                const lineSpacing = '\n'.repeat(parseInt(settings.lineSpacing || 1));
+                const parSpacing = '\n'.repeat(parseInt(settings.paragraphSpacing || 1));
+                const closingText = settings.closingText || 'Terimah Kasih';
+                
+                const line = getLine(lineStyle, 32);
+                const fontCmd = getFontCommand(fontStyle, fontSize);
+                const resetFont = '\x1B\x45\x00\x1B\x35\x12\x1D\x21\x00';
+                
+                const now = new Date();
+                const date = now.toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
+                const time = now.toLocaleTimeString('id-ID');
+
+                let printData = fontCmd + parSpacing + parSpacing;
+                
+                printData += centerText(settings.storeName || 'BS', 32) + lineSpacing;
+                printData += centerText((settings.storeAddress || '').split('\n')[0], 32) + lineSpacing;
+                if (settings.storeAddress && settings.storeAddress.includes('\n')) {
+                    printData += centerText(settings.storeAddress.split('\n')[1], 32) + lineSpacing;
+                }
+                const phoneText = (settings.phone1 || '') + ' / ' + (settings.phone2 || '');
+                printData += centerText(phoneText, 32) + lineSpacing;
+                printData += line + lineSpacing;
+                printData += ' '.repeat(32 - date.length) + date + lineSpacing;
+                printData += line + lineSpacing;
+                printData += ' '.repeat(32 - time.length) + time + '\n\n';
+                
+                printData += padRight('No', 13) + ': ' + receiptData.receiptNo + lineSpacing;
+                printData += padRight('Nama', 13) + ': ' + receiptData.customerName.substring(0, 17) + lineSpacing;
+                printData += padRight('Alamat', 13) + ': ' + (receiptData.customerAddress || '-').substring(0, 17) + lineSpacing;
+                printData += padRight('Nama Barang', 13) + ': ' + receiptData.itemName.substring(0, 17) + lineSpacing;
+                printData += padRight('Dp', 13) + ': Rp.' + (receiptData.dp === '0' ? '-' : parseInt(receiptData.dp).toLocaleString('id-ID')) + lineSpacing;
+                printData += padRight('Angsuran', 13) + ': Rp.' + parseInt(receiptData.installment).toLocaleString('id-ID') + 'x' + receiptData.installmentCount + lineSpacing;
+                printData += padRight('Angsuran ke', 13) + ': ' + receiptData.installmentNumber + '\n\n\n';
+                
+                printData += ' '.repeat(28) + 'Ttd' + '\n\n\n';
+                printData += line + lineSpacing;
+                // Italic/Cursive style for closing text
+                printData += '\x1B\x34'; // ESC 4 - Italic ON
+                printData += centerText(closingText, 32) + lineSpacing;
+                printData += '\x1B\x35'; // ESC 5 - Italic OFF
+                printData += line + lineSpacing;
+                printData += resetFont + parSpacing + parSpacing + parSpacing;
+
+                await sendToPrinter(printData);
+
+                showAlert('✅ Struk berhasil dicetak!');
+                return true;
+
+            } catch (error) {
+                showAlert('❌ Gagal mencetak: ' + error.message);
+                return false;
+            }
         }
 
-        async function saveAndPrint() {
+        async function printAndSave() {
             const receiptData = {
                 receiptNo: document.getElementById('receiptNo').value,
                 customerName: document.getElementById('customerName').value.trim(),
